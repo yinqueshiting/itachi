@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.itachi.mapper.TestMapper">
+
+    <resultMap type="com.example.itachi.entity.Test" id="testTicketLists">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <collection property="ticketList" javaType="java.util.List" ofType="com.example.itachi.entity.Ticket">
+            <result property="id" column="id" jdbcType="INTEGER"/>
+            <result property="ticketName" column="ticket_name" jdbcType="VARCHAR"/>
+            <result property="tickerAmount" column="ticker_amount" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectOne" resultType="com.example.itachi.entity.Test">
+        select id,name,phone from test where id = #{id}
+    </select>
+
+    <insert id="insertTest" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO test ( name, phone, password, salt, user_id ) VALUES(#{test.name},#{test.phone},#{test.password},#{test.salt},#{test.userId})
+    </insert>
+
+    <select id="selectUserTicketLists" resultMap="testTicketLists">
+        select ticket.ticket_name,ticket.ticker_amount,user.name from ticket ticket inner join test user on ticket.user_id = user.user_id where ticket.user_id = #{user_id}
+    </select>
+</mapper>
