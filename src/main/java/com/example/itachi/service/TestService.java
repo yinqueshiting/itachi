@@ -1,7 +1,7 @@
 package com.example.itachi.service;
 
-import com.example.itachi.entity.Test;
-import org.springframework.stereotype.Service;
+import com.example.itachi.entity.User;
+import com.example.itachi.entity.Ticket;
 
 import java.util.List;
 
@@ -19,12 +19,18 @@ public interface TestService {
      * @param id 主键
      * @return 实例对象
      */
-    Test queryById(Integer id);
+    User queryById(Integer id);
 
-    Test insertReturnId(Test test);
+    User insertReturnId(User test);
 
 
-    Test selectOneFormMP(Test test);
+    User selectOneFormMP(User test);
 
-    Test selectUserTicketLists(Test test);
+    User selectUserTicketLists(User test);
+
+    List<User> selectUserLists();
+
+    Ticket selectSingleTicketInfo(Ticket ticket);
+
+    Integer updateTicketInfo(Ticket ticket);
 }

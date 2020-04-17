@@ -1,12 +1,12 @@
 package com.example.itachi.controller;
 
-import com.example.itachi.entity.Test;
+import com.example.itachi.entity.User;
+import com.example.itachi.entity.Ticket;
 import com.example.itachi.service.TestService;
 import com.example.itachi.util.Result;
 import com.example.itachi.util.validated.InsertValidated;
 import com.example.itachi.util.validated.SelectValidated;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +48,7 @@ public class TestController {
         新增后返回表的自增主键
      */
     @PostMapping("insertReturnId")
-    public Result insertReturnId(@RequestBody  @Validated(InsertValidated.class) Test test){
+    public Result insertReturnId(@RequestBody  @Validated(InsertValidated.class) User test){
         log.info("参数：{}",test);
         return Result.success(testService.insertReturnId(test));
     }
@@ -56,7 +56,7 @@ public class TestController {
         参数验证
      */
     @PostMapping("selectOneFormMP")
-    public Result selectOneFormMP(@RequestBody @Validated(SelectValidated.class) Test test){
+    public Result selectOneFormMP(@RequestBody @Validated(SelectValidated.class) User test){
         return Result.success(testService.selectOneFormMP(test));
     }
 
@@ -64,7 +64,33 @@ public class TestController {
      * 关于级联查询
      */
     @PostMapping("selectUserTicketLists")
-    public Result selectUserTicketLists(@RequestBody @Validated(SelectValidated.class) Test test){
+    public Result selectUserTicketLists(@RequestBody @Validated(SelectValidated.class) User test){
         return Result.success(testService.selectUserTicketLists(test));
+    }
+
+    /**
+     *  返回单个Bean的列表
+     */
+    @PostMapping("selectUserLists")
+    public Result selectUserLists(){
+        return Result.success(testService.selectUserLists());
+    }
+
+
+
+    /*
+        查询单个票信息 使用@TableName("ticket")后不需要再对每一个字段标注@Column
+     */
+    @PostMapping("selectSingleTicketInfo")
+    public Result selectSingleTicketInfo(@RequestBody Ticket ticket){
+        return Result.success(testService.selectSingleTicketInfo(ticket));
+    }
+
+    /**
+     * 测试修改
+     */
+    @PostMapping("updateTicketInfo")
+    public Result updateTicketInfo(@RequestBody Ticket ticket){
+        return Result.success(testService.updateTicketInfo(ticket));
     }
 }

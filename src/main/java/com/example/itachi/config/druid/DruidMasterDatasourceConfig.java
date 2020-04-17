@@ -24,16 +24,16 @@ import javax.sql.DataSource;
 @Configuration
 public class DruidMasterDatasourceConfig {
 
-    /*@Value("spring.datasource.url")
+    @Value("spring.datasource.druid.url")
     private String url;
     @Value("spring.datasource.driver-class-name")
     private String driver;
-    @Value("spring.datasource.username")
+    @Value("spring.datasource.druid.username")
     private String username;
-    @Value("spring.datasource.password")
+    @Value("spring.datasource.druid.password")
     private String password;
 
-    @Bean
+  /*  @Bean
     public DataSource masterDataSource(){
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUrl(url);
@@ -42,13 +42,12 @@ public class DruidMasterDatasourceConfig {
         druidDataSource.setPassword(password);
         return druidDataSource;
     }*/
-    @Autowired
-    private DataSource dataSource;
+
 
    /* @Bean
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataSource);
+        sqlSessionFactoryBean.setDataSource(masterDataSource());
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mapper/*.xml"));
         return sqlSessionFactoryBean.getObject();

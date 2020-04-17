@@ -29,9 +29,9 @@ import java.util.List;
  * @since 2020-04-08 11:42:42
  */
 @Entity
-@Table(name = "test")
+@Table(name = "user")
 @Data
-public class Test implements Serializable {
+public class User implements Serializable {
     private static final long serialVersionUID = 675225418891068452L;
     /**
     * 主键 新增时不需要 删改查时需要做条件
@@ -64,7 +64,7 @@ public class Test implements Serializable {
     @Column(name = "password")
     @NotEmpty(groups = InsertValidated.class,message = "password cannot be null")
     @Size(min = 6,max = 16,groups = InsertValidated.class,message = "密码长度在6-16")
-    private transient String password;
+    private transient String password; //
 
 
     @JsonIgnore
@@ -73,10 +73,18 @@ public class Test implements Serializable {
 
     @Column(name = "user_id")
     @Null(groups = InsertValidated.class)
-    @NotNull(message = "user_id cannot be null",groups = {SelectValidated.class,UpdateValidated.class, DeleteValidated.class})
+    @NotEmpty(message = "user_id cannot be null",groups = {SelectValidated.class,UpdateValidated.class, DeleteValidated.class})
     private String userId;
 
 
-    @TableField
+    @TableField(exist = false)
+    /*condition : 预处理 WHERE 实体条件自定义运算规则
+        @TableField(condition = SqlCondition.LIKE)
+        private String name;
+        输出 SQL 为：select 表 where name LIKE CONCAT('%',值,'%')
+    */
     private List<Ticket> ticketList;
+
+    @Column(name = "status")
+    private String status;
 }

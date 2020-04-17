@@ -1,6 +1,6 @@
 package com.example.itachi.mapper;
 
-import com.example.itachi.entity.Test;
+import com.example.itachi.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +14,11 @@ import java.util.List;
  */
 @Repository
 public interface TestMapper {
-    Test selectOne(@Param("id") Integer id);
+    User selectOne(@Param("id") Integer id);
 
-    int insertTest(@Param("test") Test test);
+    int insertTest(@Param("test") User test);
 
-    Test selectUserTicketLists(@Param("user_id") String userId);
+    User selectUserTicketLists(@Param("user_id") String userId);
+
+    List<User> selectUserLists();
 }

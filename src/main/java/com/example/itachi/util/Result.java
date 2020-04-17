@@ -48,4 +48,37 @@ public class Result implements Serializable {
         result.setResult_message("FAIL");
         return result;
     }
+    public static Result fail(String result_message){
+        Result result = new Result();
+        result.setRequest_is_sussess(false);
+        result.setResult_code(ResultCodeUtil.FAIL);
+        result.setResult_message(result_message);
+        //result.setResult_message("FAIL");
+        return result;
+    }
+
+    /**
+     * 未登录
+     * @param
+     * @return
+     */
+    public static Result notLogin(){
+        Result result = new Result();
+        result.setRequest_is_sussess(false);
+        result.setResult_code(ResultCodeUtil.NOT_LOGIN);
+        result.setResult_message("未登录");
+        return result;
+    }
+    /**
+     * 没有操作权限
+     * @param
+     * @return
+     */
+    public static Result unAuthorized(){
+        Result result = new Result();
+        result.setRequest_is_sussess(false);
+        result.setResult_code(ResultCodeUtil.UNAUTHORIZED);
+        result.setResult_message("没有操作权限");
+        return result;
+    }
 }
