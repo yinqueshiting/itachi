@@ -7,6 +7,8 @@ import com.example.itachi.util.Result;
 import com.example.itachi.util.validated.InsertValidated;
 import com.example.itachi.util.validated.SelectValidated;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,6 +74,7 @@ public class TestController {
      *  返回单个Bean的列表
      */
     @PostMapping("selectUserLists")
+    @RequiresPermissions(value = "selectLists")
     public Result selectUserLists(){
         return Result.success(testService.selectUserLists());
     }

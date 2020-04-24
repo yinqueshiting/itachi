@@ -30,7 +30,7 @@
         select ticket.ticket_name,ticket.ticker_amount,user.name from ticket ticket inner join user user on ticket.user_id = user.user_id where ticket.user_id = #{user_id}
     </select>
 
-    <select id="selectUserLists" resultType="com.example.itachi.entity.User">
+    <select id="selectUserLists" resultType="com.example.itachi.entity.User"> /*resultType="com.example.itachi.entity.User"*/
         select user_id,name,phone,create_time from user
     </select>
 </mapper>

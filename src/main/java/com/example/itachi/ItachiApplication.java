@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.example.itachi.*"})
+//@ComponentScan(basePackages = {"com.example.itachi.*"})
 @MapperScan(basePackages = {"com.example.itachi.mapper"})
 public class ItachiApplication {
 

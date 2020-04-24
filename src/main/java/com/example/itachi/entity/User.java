@@ -66,6 +66,8 @@ public class User implements Serializable {
     @Size(min = 6,max = 16,groups = InsertValidated.class,message = "密码长度在6-16")
     private transient String password; //
 
+    @Column(name = "password2")
+    private String password2;
 
     @JsonIgnore
     private String salt;

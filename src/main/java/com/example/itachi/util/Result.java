@@ -57,6 +57,15 @@ public class Result implements Serializable {
         return result;
     }
 
+    public static Result fail(String result_code, String result_message){
+        Result result = new Result();
+        result.setRequest_is_sussess(false);
+        result.setResult_code(result_code);
+        result.setResult_message(result_message);
+        //result.setResult_message("FAIL");
+        return result;
+    }
+
     /**
      * 未登录
      * @param
