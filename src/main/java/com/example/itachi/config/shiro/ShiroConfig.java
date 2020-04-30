@@ -125,6 +125,8 @@ public class ShiroConfig {
     public SessionManager sessionManager(){
         DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
         defaultWebSessionManager.setSessionDAO(redisSessionDAO());
+        defaultWebSessionManager.setDeleteInvalidSessions(true);//自动删除过期的session
+        defaultWebSessionManager.setSessionValidationSchedulerEnabled(true);//是否定时检查session
         return defaultWebSessionManager;
     }
 

@@ -9,6 +9,8 @@ import com.example.itachi.util.validated.SelectValidated;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,9 @@ public class TestController {
      */
     @Resource
     private TestService testService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 通过主键查询单条数据
@@ -95,5 +100,16 @@ public class TestController {
     @PostMapping("updateTicketInfo")
     public Result updateTicketInfo(@RequestBody Ticket ticket){
         return Result.success(testService.updateTicketInfo(ticket));
+    }
+
+    @PostMapping("redisTest")
+    public Result redisTest(){
+        User user = new User();
+        user.setId(12255);
+        user.setSalt("5021");
+
+        redisTemplate.opsForSet().add(user.getId(),user);
+        //randomMember
+        return Result.success(redisTemplate.opsForSet().randomMember(12255));
     }
 }

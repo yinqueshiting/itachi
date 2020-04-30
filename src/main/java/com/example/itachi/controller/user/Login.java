@@ -5,6 +5,7 @@ import com.example.itachi.entity.User;
 import com.example.itachi.mapper.user.UserMapper;
 import com.example.itachi.util.Result;
 import com.example.itachi.util.ResultCodeUtil;
+import com.example.itachi.util.SpringUtil;
 import javafx.application.Application;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.core.ApplicationContext;
@@ -14,8 +15,12 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.RealmSecurityManager;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.crazycake.shiro.RedisSessionDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +31,9 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class Login {
+
+    @Autowired
+    private RedisSessionDAO redisSessionDAO;
 
     private final UserMapper userMapper;
 
@@ -86,6 +94,13 @@ public class Login {
         return Result.success();
     }
 
+    @RequestMapping("/static/userLogout2")
+    public Result userLogout2(){
+        Session session = SecurityUtils.getSubject().getSession();
+        redisSessionDAO.delete(session);
+        return Result.success();
+    }
+
     //在这里测试给测试员加上查询全部用户的权限，验证刷新权限是否成功
     @RequestMapping("/updateUserPermissions")
     public Result updateUserPermissions(){
@@ -117,7 +132,6 @@ public class Login {
 
             subject.releaseRunAs();*/
 
-            ApplicationContext.ge
         }
         catch (Exception e){
             e.printStackTrace();
