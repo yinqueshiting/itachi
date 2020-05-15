@@ -18,7 +18,7 @@ public interface TestMapper {
 
     int insertTest(@Param("test") User test);
 
-    User selectUserTicketLists(@Param("user_id") String userId);
+    User selectUserTicketLists(@Param("user_id") String userId,@Param("page")Integer page,@Param("rows")Integer rows);
 
     List<User> selectUserLists();
 }

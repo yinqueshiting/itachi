@@ -1,8 +1,6 @@
 package com.example.itachi.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.SqlCondition;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.itachi.util.validated.DeleteValidated;
@@ -11,15 +9,12 @@ import com.example.itachi.util.validated.SelectValidated;
 import com.example.itachi.util.validated.UpdateValidated;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 import sun.security.krb5.internal.Ticket;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -90,4 +85,10 @@ public class User implements Serializable {
 
     @Column(name = "status")
     private String status;
+
+    @TableField(exist = false)
+    private Integer page;
+
+    @TableField(exist = false)
+    private Integer rows;
 }

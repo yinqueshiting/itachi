@@ -2,6 +2,7 @@ package com.example.itachi.service;
 
 import com.example.itachi.entity.User;
 import com.example.itachi.entity.Ticket;
+import com.example.itachi.util.Result;
 
 import java.util.List;
 
@@ -33,4 +34,6 @@ public interface TestService {
     Ticket selectSingleTicketInfo(Ticket ticket);
 
     Integer updateTicketInfo(Ticket ticket);
+
+    Result hotActivities(Ticket ticket,int port) throws InterruptedException;
 }

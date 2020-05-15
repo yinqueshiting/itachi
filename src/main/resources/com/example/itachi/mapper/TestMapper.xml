@@ -27,7 +27,7 @@
     </insert>
 
     <select id="selectUserTicketLists" resultMap="testTicketLists">
-        select ticket.ticket_name,ticket.ticker_amount,user.name from ticket ticket inner join user user on ticket.user_id = user.user_id where ticket.user_id = #{user_id}
+        select ticket.ticket_name,ticket.ticker_amount,user.name from ticket ticket inner join user user on ticket.user_id = user.user_id where ticket.user_id = #{user_id} limit #{page},#{rows}
     </select>
 
     <select id="selectUserLists" resultType="com.example.itachi.entity.User"> /*resultType="com.example.itachi.entity.User"*/

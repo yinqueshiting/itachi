@@ -6,13 +6,21 @@ import com.example.itachi.entity.Ticket;
 import com.example.itachi.mapper.TestMapper;
 import com.example.itachi.mapper.TestPlusMapper;
 import com.example.itachi.mapper.TicketPlusMapper;
+import com.example.itachi.service.AsyncService;
 import com.example.itachi.service.TestService;
+import com.example.itachi.util.Result;
+import com.example.itachi.util.ResultCodeUtil;
 import com.example.itachi.util.SHA256Util;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 
@@ -28,15 +36,21 @@ import java.util.Random;
 public class TestServiceImpl implements TestService {
     private final TestMapper testMapper;
 
-    public TestServiceImpl(TestMapper testMapper, TestPlusMapper testPlusMapper, TicketPlusMapper ticketPlusMapper) {
+    public TestServiceImpl(TestMapper testMapper, TestPlusMapper testPlusMapper, TicketPlusMapper ticketPlusMapper, RedisTemplate redisTemplate, StringRedisTemplate stringRedisTemplate, AsyncService asyncService) {
         this.testMapper = testMapper;
         this.testPlusMapper = testPlusMapper;
         this.ticketPlusMapper = ticketPlusMapper;
+        this.redisTemplate = redisTemplate;
+        this.asyncService = asyncService;
     }
 
     private final TestPlusMapper testPlusMapper;
 
     private final TicketPlusMapper ticketPlusMapper;
+
+    private final RedisTemplate redisTemplate;
+
+    private final AsyncService asyncService;
 
     @Override
     public User queryById(Integer id) {
@@ -71,9 +85,13 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    @Cacheable(value = "selectUserTicketLists",key = "#root.args[0].page+':'+#root.args[0].rows")
     public User selectUserTicketLists(User test) {
+        log.info("进入方法内部");
         String userId = test.getUserId();
-        User userTicketLists = testMapper.selectUserTicketLists(userId);
+        Integer page = test.getPage()==null?1:test.getPage();
+        Integer rows = test.getRows()==null?10:test.getRows();
+        User userTicketLists = testMapper.selectUserTicketLists(userId,(page-1)*rows,rows);
         return userTicketLists;
     }
 
@@ -91,11 +109,33 @@ public class TestServiceImpl implements TestService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
+    @CacheEvict(allEntries = true,value = "selectUserTicketLists")
     public Integer updateTicketInfo(Ticket ticket) {
         Ticket updateTicket = new Ticket();
         updateTicket.setId(ticket.getId());
         QueryWrapper<Ticket> updateWrapper = new QueryWrapper<>(updateTicket);
         int updateRows = ticketPlusMapper.update(ticket,updateWrapper);
         return updateRows;
+    }
+
+    @Override
+    public Result hotActivities(Ticket ticket,int port) throws InterruptedException {
+        //后续再来考虑 解锁和加锁保证是同一客户端的问题
+
+        if(redisTemplate.opsForValue().setIfAbsent("hotActivities",0,Duration.ofSeconds(3))) {
+            Integer ticket_amount = (Integer) redisTemplate.opsForValue().get("time_amount");
+            if (ticket_amount>0){
+                redisTemplate.opsForValue().decrement("time_amount");
+                //调用异步的线程去对数据库进行写入
+                asyncService.addInfo(ticket,port);
+            }else{
+                return Result.fail(ResultCodeUtil.INSUFFICIENT_INVENTORY,"库存不足！");
+            }
+            //最后一定要释放锁
+            redisTemplate.delete("hotActivities");
+        }else{
+            return Result.fail(ResultCodeUtil.TRY_AGAIN_LATER,"请稍后再试");
+        }
+        return Result.success();
     }
 }

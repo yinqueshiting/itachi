@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Role> selectRoleListByUserId(String user_id) {
-
         return userMapper.selectRoleListByUserId(user_id);
     }
 }

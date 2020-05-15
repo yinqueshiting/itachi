@@ -18,4 +18,8 @@ public class ResultCodeUtil {
     public static final String LOCKED_ACCOUNT  = "0005";
     //账号不存在
     public static final String  AUTHENTICATION  = "0006";
+    //请稍后再说
+    public static final String  TRY_AGAIN_LATER  = "0007";
+    //库存不足
+    public static final String  INSUFFICIENT_INVENTORY  = "0008";
 }
