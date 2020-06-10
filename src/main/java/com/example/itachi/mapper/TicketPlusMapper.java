@@ -6,6 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 @Mapper
-@Repository
 public interface TicketPlusMapper extends BaseMapper<Ticket> {
 }
