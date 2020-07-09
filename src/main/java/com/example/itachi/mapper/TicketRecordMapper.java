@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface TicketRecordMapper {
 
     @Insert("insert into ticket_record(port) values(#{port})")

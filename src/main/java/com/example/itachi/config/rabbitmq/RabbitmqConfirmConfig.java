@@ -27,7 +27,7 @@ public class RabbitmqConfirmConfig implements RabbitTemplate.ConfirmCallback {
                 log.info("此处来重发");
             }catch (Exception e){
                 if(e instanceof AmqpConnectException){
-                    //这种属于RabbitMQ Broker出现了问题，重发也没有意义
+                    //这种属于RabbitMQ Broker出现了问题，重发也没有意义，尝试其它方式做保存
                     log.info("RabbitMQ服务器出现问题了");
                 }
             }

@@ -14,8 +14,8 @@ public class RabbitmqReturnConfig implements RabbitTemplate.ReturnCallback {
     public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
         log.info("return机制message：{}",message);
         log.info("return机制replyCode：{}",replyCode);
-        log.info("return机制replyText：{}",replyText);
         log.info("return机制exchange：{}",exchange);
+        log.info("return机制replyText：{}",replyText);
         log.info("return机制routingKey：{}",routingKey);
     }
 }

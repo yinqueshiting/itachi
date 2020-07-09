@@ -131,7 +131,7 @@ public class TestServiceImpl implements TestService {
             }else{
                 return Result.fail(ResultCodeUtil.INSUFFICIENT_INVENTORY,"库存不足！");
             }
-            //最后一定要释放锁
+            //最后一定要释放锁 优化时应该在finally里进行
             redisTemplate.delete("hotActivities");
         }else{
             return Result.fail(ResultCodeUtil.TRY_AGAIN_LATER,"请稍后再试");

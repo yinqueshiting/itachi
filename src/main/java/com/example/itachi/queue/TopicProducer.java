@@ -20,7 +20,12 @@ public class TopicProducer {
     private RabbitTemplate rabbitTemplate;
 
     public void send(String routingKey,String json){
-        Message message = MessageBuilder.withBody(json.getBytes()).setContentType(MessageProperties.CONTENT_TYPE_JSON).setContentEncoding("utf-8").setMessageId(UUID.randomUUID()+"").build();
+        Message message = MessageBuilder.withBody(json.getBytes())
+                .setContentType(MessageProperties.CONTENT_TYPE_JSON)
+                .setContentEncoding("utf-8")
+                .setMessageId(UUID.randomUUID()+"")
+                //.setExpiration(8000+"")//设置这个消息的TTL为8s
+                .build();
         //加上自定义的CorrelationData对象，在confirm失败时进行重发
         CustomCorrelationData customCorrelationData = new CustomCorrelationData();
 

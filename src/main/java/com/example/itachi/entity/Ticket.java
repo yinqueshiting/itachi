@@ -43,4 +43,8 @@ public class Ticket implements Serializable {
     @TableField(exist = false)
     private User test;
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

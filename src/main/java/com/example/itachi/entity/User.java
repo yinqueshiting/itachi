@@ -9,6 +9,8 @@ import com.example.itachi.util.validated.SelectValidated;
 import com.example.itachi.util.validated.UpdateValidated;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import sun.security.krb5.internal.Ticket;
 
@@ -27,6 +29,8 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+//@JsonIgnoreProperties(value = {"password","salt"})
 public class User implements Serializable {
     private static final long serialVersionUID = 675225418891068452L;
     /**

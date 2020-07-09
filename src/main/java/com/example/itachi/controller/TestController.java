@@ -133,16 +133,10 @@ public class TestController {
     }
 
     @PostMapping("hotActivities")
-    public Result hotActivities(Ticket ticket, HttpServletRequest request){
-
-        try {
+    public Result hotActivities(Ticket ticket, HttpServletRequest request) throws InterruptedException {
             //获取端口号
             int port = request.getLocalPort();
             return testService.hotActivities(ticket,port);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Result.success("成功");
     }
 
 }
