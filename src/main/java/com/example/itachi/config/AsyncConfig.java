@@ -11,9 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
     private static final Integer CORE_POOL_SIZE = 6;
-
     private static final Integer MAX_POOL_SIZE = 10;
-
     private static final Integer QUEUE_CAPACITY = 100;
 
     @Bean

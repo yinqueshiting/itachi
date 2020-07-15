@@ -13,7 +13,7 @@ import java.io.IOException;
 @Slf4j
 public class TopicConsumer {
 
-     volatile   int i = 0;
+     volatile int i = 0;
 
      //在使用延迟队列时，该C订阅的Q被改成了缓冲队列 不被C订阅
     @RabbitListener(queues = TopicConfig.TOPIC_QUEUE_ONE)
