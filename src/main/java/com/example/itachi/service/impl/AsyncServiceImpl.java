@@ -25,7 +25,7 @@ public class AsyncServiceImpl implements AsyncService {
     }
 
     @Override
-    @Async
+    @Async("taskExecutor")
     public Result addInfo(Ticket ticket,int port) throws InterruptedException {
         log.info("调用了异步addInfo");
         ticketRecordMapper.addRecord(port);

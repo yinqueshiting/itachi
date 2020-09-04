@@ -39,17 +39,17 @@ public class TopicConsumer {
 
     @RabbitListener(queues = TopicConfig.TOPIC_QUEUE_FOUR)
     public void consumerFour(String json, Channel channel, Message message) throws IOException {
-                log.info("Mess:{}",message);
-                //模拟出现一个runtimeException，测试配置的重试机制
+        log.info("Mess:{}",message);
+        //模拟出现一个runtimeException，测试配置的重试机制
 
-                log.info("cn.#接收到的消息体：{}",json);
-                //手动进行回复 消息处理完毕
-                channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
-                //拒绝消息
-                //channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,true);
+        log.info("cn.#接收到的消息体：{}",json);
+        //手动进行回复 消息处理完毕
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+        //拒绝消息
+        //channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,true);
 
-                //false直接拒绝，并不持久化到Q中，true为放置在Q中处于unack状态
-                channel.basicReject(message.getMessageProperties().getDeliveryTag(),true);
+        //false直接拒绝，并不持久化到Q中，true为放置在Q中处于unack状态
+        channel.basicReject(message.getMessageProperties().getDeliveryTag(),true);
 
 
 

@@ -44,6 +44,8 @@ public class TestServiceImpl implements TestService {
         this.asyncService = asyncService;
     }
 
+    private final String HOT_ACTIVITIES_KEY = "hotActivities";
+
     private final TestPlusMapper testPlusMapper;
 
     private final TicketPlusMapper ticketPlusMapper;
@@ -118,7 +120,14 @@ public class TestServiceImpl implements TestService {
         return updateRows;
     }
 
-    @Override
+    /**
+     * 这是第一个版本，没有在释放时判断当前锁是否为此线程锁加上的，不应该出现A线程释放了B锁的情况
+     * @param ticket
+     * @param port
+     * @return
+     * @throws InterruptedException
+     */
+   /* @Override
     public Result hotActivities(Ticket ticket,int port) throws InterruptedException {
         //后续再来考虑 解锁和加锁保证是同一客户端的问题
 
@@ -137,5 +146,46 @@ public class TestServiceImpl implements TestService {
             return Result.fail(ResultCodeUtil.TRY_AGAIN_LATER,"请稍后再试");
         }
         return Result.success();
+    }*/
+
+        //在这里 get 和 decrement不是一个原子操作 也会出现问题
+       /* Integer ticket_amount = (Integer) redisTemplate.opsForValue().get("time_amount");
+        if (ticket_amount > 0) {
+            redisTemplate.opsForValue().decrement("time_amount");
+            //调用异步的线程去对数据库进行写入
+            asyncService.addInfo(ticket, port);
+        } else {
+            return Result.fail(ResultCodeUtil.INSUFFICIENT_INVENTORY, "库存不足！");
+        }*/
+
+       //如果说A线程加锁成功后，异常退出了 那是不是后续的所有线程都需要等待A自动过期
+    @Override
+    public Result hotActivities(Ticket ticket,int port) throws InterruptedException {
+        //random_value作为全局的唯一值，如果在多机器实例上想保证唯一可以采用UUID
+        Long random_value = System.currentTimeMillis();
+        //setIfAbsent返回Boolean类型 ，如果原key不存在才会true，key已存在则不会做任何修改
+        try {
+            if (redisTemplate.opsForValue().setIfAbsent(HOT_ACTIVITIES_KEY, random_value, Duration.ofSeconds(30))) {
+                log.info("就只一句话");
+               //这里是先执行扣减再去判断，所以当Redis中的time_amount为-1时，则说明库存已经卖完了
+               Long residualAmount = redisTemplate.opsForValue().decrement("time_amount");
+                if (residualAmount >= 0) {
+                    //调用异步的线程去对数据库进行写入
+                    asyncService.addInfo(ticket, port);
+                } else {
+                    return Result.fail(ResultCodeUtil.INSUFFICIENT_INVENTORY, "库存不足！");
+                }
+            } else {
+                return Result.fail(ResultCodeUtil.TRY_AGAIN_LATER, "请稍后再试");
+            }
+        }finally {
+            //有说 获取和删除不是一个原子性的操作， 可以使用RedissonLock 来使用，使用起来类似于ReentrantLock 一样tryLock ，unLock
+            //redissonLock是使用LUA脚本来完成 保证原子性；针对并发不高的情况还是setnx来做
+            if(random_value.equals(redisTemplate.opsForValue().get(HOT_ACTIVITIES_KEY)))
+                redisTemplate.delete(HOT_ACTIVITIES_KEY);
+        }
+
+        return Result.success();
     }
+
 }
